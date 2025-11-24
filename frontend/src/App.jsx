@@ -38,7 +38,12 @@ export default function App() {
     setTheme(theme === 'light' ? 'dark' : 'light');
   };
 
-  const API_URL = 'http://localhost:5000/api/generate';
+  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/generate';
+
+  // Debug: Log API URL (remove in production if needed)
+  useEffect(() => {
+    console.log('API URL:', API_URL);
+  }, []);
 
   const handleGenerate = async () => {
     if (!prompt.trim()) {
@@ -76,7 +81,7 @@ export default function App() {
       if (err.response) {
         setError(err.response.data.error || 'Failed to generate code');
       } else if (err.request) {
-        setError('Cannot connect to backend. Make sure server is running on port 5000');
+        setError(`Cannot connect to backend at ${API_URL}. Please check your backend URL.`);
       } else {
         setError(err.message || 'Failed to generate code');
       }
